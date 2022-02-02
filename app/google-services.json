@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "306716679295",
+    "project_id": "reportmyaccident-a593d",
+    "storage_bucket": "reportmyaccident-a593d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:306716679295:android:7281b4453302d3ad50334a",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "306716679295-p7u4ibfmcdrg9veofucfih0jt2ss7dv7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZN0gGXlrLUwXLjFwY4U2fY0Ql7306fFk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "306716679295-p7u4ibfmcdrg9veofucfih0jt2ss7dv7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
