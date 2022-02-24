@@ -34,7 +34,7 @@
         android:padding="15dp"
         android:layout_margin="5dp"
         android:textColorHint="@color/black"
-android:backgroundTint="@color/backgroud_color"
+android:backgroundTint="@color/secondry_color"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/send"

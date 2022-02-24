@@ -40,7 +40,7 @@
         android:hint="@string/email_edt"
         android:inputType="textEmailAddress"
         android:padding="15dp"
-        android:textColorHint="@color/black"
+
 
         android:textStyle="bold" />
 
@@ -53,8 +53,6 @@
         android:hint="@string/password_edt"
         android:inputType="textPassword"
         android:padding="15dp"
-        android:textColorHint="@color/black"
-
         android:textStyle="bold" />
     <!-- Login Button -->
 
@@ -69,7 +67,7 @@
         android:onClick="goHome"
         android:padding="15dp"
         android:text="@string/login_btn"
-        android:textColor="@color/black"
+        android:textColor="@color/secondry_color"
         android:textStyle="bold" />
 
     <TextView
@@ -96,13 +94,13 @@
         android:onClick="returnRegister"
         android:padding="15dp"
         android:text="@string/register_btn"
-        android:textColor="@color/black"
+        android:textColor="@color/secondry_color"
         android:textStyle="bold" />
 
     <ProgressBar
         android:id="@+id/progressBarLogin"
         android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_height="18dp"
         android:layout_gravity="center"
         android:layout_margin="20dp"
         android:visibility="invisible" />

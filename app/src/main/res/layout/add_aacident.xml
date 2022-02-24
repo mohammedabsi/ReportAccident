@@ -34,7 +34,6 @@
         android:layout_marginBottom="10dp"
         android:hint="Time"
         android:background="@drawable/input"
-        android:textColorHint="@color/black"
         android:textStyle="bold"
 
         android:padding="15dp" />
@@ -47,7 +46,6 @@
         android:hint="Date"
         android:background="@drawable/input"
         android:inputType="datetime"
-        android:textColorHint="@color/black"
         android:textStyle="bold"
 
 
@@ -62,7 +60,6 @@
         android:textStyle="bold"
         android:background="@drawable/input"
         android:inputType="text"
-        android:textColorHint="@color/black"
         android:padding="15dp" />
     <EditText
         android:id="@+id/carplate"
@@ -73,7 +70,6 @@
         android:textStyle="bold"
         android:background="@drawable/input"
         android:inputType="text"
-        android:textColorHint="@color/black"
         android:padding="15dp" />
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/add"

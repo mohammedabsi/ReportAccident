@@ -38,7 +38,6 @@
         android:background="@drawable/input"
         android:hint="@string/email_edt"
         android:padding="15dp"
-        android:textColorHint="@color/black"
 
         android:textStyle="bold" />
 
@@ -51,9 +50,6 @@
         android:hint="@string/password_edt"
         android:inputType="textPassword"
         android:padding="15dp"
-        android:textColorHint="@color/black"
-
-
         android:textStyle="bold" />
 
     <EditText
@@ -65,7 +61,6 @@
         android:hint="@string/idNum"
         android:inputType="text"
         android:padding="15dp"
-        android:textColorHint="@color/black"
         android:textStyle="bold" />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -76,9 +71,10 @@
         android:layout_margin="5dp"
         android:background="@drawable/input"
         android:onClick="Register"
-        android:padding="15dp"
+        android:padding="5dp"
         android:text="@string/register_btn"
-        android:textColor="@color/black"
+        android:textSize="13sp"
+        android:textColor="@color/secondry_color"
         android:textStyle="bold" />
 
     <TextView
@@ -89,6 +85,7 @@
         android:layout_margin="5dp"
         android:gravity="center"
         android:paddingBottom="10dp"
+
         android:text="@string/ihaaveaccount"
         android:textColor="@color/black"
         android:textSize="13sp"
@@ -100,10 +97,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/input"
-        android:padding="15dp"
+        android:padding="5dp"
         android:text="@string/login_btn"
         android:onClick="returnLogin"
-        android:textColor="@color/black"
+        android:textColor="@color/secondry_color"
         android:textStyle="bold" />
 
     <ProgressBar

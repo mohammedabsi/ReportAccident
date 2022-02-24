@@ -40,6 +40,7 @@ public class SignInActivity extends AppCompatActivity {
     }
     public void goHome(View view) {
         closeKeyboard();
+        progressBarlogin.setVisibility(View.VISIBLE);
         mfirebaseFirestore = FirebaseFirestore.getInstance();
 
 
@@ -64,6 +65,7 @@ public class SignInActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
 
                 if (task.isSuccessful()) {
+                    progressBarlogin.setVisibility(View.GONE);
                     Toast.makeText(SignInActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(SignInActivity.this, MainActivity.class));
                     finish();

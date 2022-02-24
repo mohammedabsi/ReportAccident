@@ -55,6 +55,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void Register(View view) {
         closeKeyboard();
+        progressBarRegister.setVisibility(View.VISIBLE);
         String user_id = idNum.getText().toString().trim();
         String email = emailEdt.getText().toString().trim();
         String password = passwordEdt.getText().toString().trim();
@@ -89,13 +90,11 @@ public class SignUpActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(SignUpActivity.this, "Register success :)", Toast.LENGTH_SHORT).show();
-                                progressBarRegister.setVisibility(View.VISIBLE);
                                 progressBarRegister.setVisibility(View.GONE);
+                                Toast.makeText(SignUpActivity.this, "Register success :)", Toast.LENGTH_SHORT).show();
                                 goHomeActivity();
                             } else {
                                 Toast.makeText(SignUpActivity.this, "Register Failed :(", Toast.LENGTH_SHORT).show();
-                                progressBarRegister.setVisibility(View.VISIBLE);
                                 progressBarRegister.setVisibility(View.GONE);
 
 
