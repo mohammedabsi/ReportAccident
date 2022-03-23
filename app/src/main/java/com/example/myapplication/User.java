@@ -1,21 +1,30 @@
 package com.example.myapplication;
 
 public class User {
-    public String  email, password, userId;
+    public String  email, password, userName , date;
 
 
     public User() {
 
     }
 
-    public User( String userId, String password, String email) {
+    public User( String userName, String password, String email , String date) {
 
-        this.userId = userId;
+        this.userName = userName;
         this.password = password;
         this.email = email;
+        this.date = date;
 
 
 
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getEmail() {
@@ -34,12 +43,12 @@ public class User {
         this.password = password;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
 

@@ -9,6 +9,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,15 +18,29 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     private int clickedNavItem = 0;
     LinearLayout container;
-    ImageView backBtn ;
+    ImageView   userAvatarIv;
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    String userEmail = firebaseAuth.getCurrentUser().getEmail();
+    NavigationView navigation_view ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +48,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
         container = findViewById(R.id.container);
-        backBtn = findViewById(R.id.backBtn);
+
+
+        navigation_view = findViewById(R.id.navigation_view);
+
+        View hView =  navigation_view.inflateHeaderView(R.layout.menu_layout);
+        userAvatarIv = hView.findViewById(R.id.userAvatarIv);
+
+
+
+
 
 
         if (savedInstanceState == null) {
-            backBtn.setVisibility(View.GONE);
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new MainFragment()).commit();
-            Log.d("TAG", "onCreate: "+getSupportFragmentManager().getFragments().contains(new MainFragment()));
+            Log.d("TAG", "onCreate: " + getSupportFragmentManager().getFragments().contains(new MainFragment()));
         }
 
 //         if (){
@@ -72,18 +95,16 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.home:
                         clickedNavItem = R.id.home;
-                        backBtn.setVisibility(View.GONE);
                         getSupportFragmentManager().beginTransaction().replace(R.id.container, new MainFragment()).commit();
                         break;
                     case R.id.nav_profile:
                         clickedNavItem = R.id.nav_profile;
-                        backBtn.setVisibility(View.VISIBLE);
                         getSupportFragmentManager().beginTransaction().replace(R.id.container, new ProfileFragment()).commit();
                         break;
-                    case R.id.nav_settings:
-                        snackbar.show();
-                        clickedNavItem = R.id.nav_settings;
-                        break;
+//                    case R.id.nav_settings:
+//                        snackbar.show();
+//                        clickedNavItem = R.id.nav_settings;
+//                        break;
 
                     case R.id.nav_logout:
                         FirebaseAuth.getInstance().signOut();
@@ -119,9 +140,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.nav_profile:
 
                         break;
-                    case R.id.nav_settings:
 
-                        break;
                     case R.id.nav_logout:
 
                         break;
@@ -139,11 +158,50 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     public void ReturnHome(View view) {
-        backBtn.setVisibility(View.GONE);
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new MainFragment()).commit();
+
+    }
+
+    private void generateQR() {
+
+
+
+            firebaseFirestore.collection("User").document(userEmail).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        String myText = task.getResult().getString("email");
+
+                        //initializing MultiFormatWriter for QR code
+                        MultiFormatWriter mWriter = new MultiFormatWriter();
+
+                        try {
+                            //BitMatrix class to encode entered text and set Width &amp; Height
+                            BitMatrix mMatrix = mWriter.encode(myText, BarcodeFormat.QR_CODE, 120, 120);
+
+                            BarcodeEncoder mEncoder = new BarcodeEncoder();
+                            Bitmap mBitmap = mEncoder.createBitmap(mMatrix);//creating bitmap of code
+                            userAvatarIv.setImageBitmap(mBitmap);//Setting generated QR code to imageView
+
+
+                        } catch (WriterException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            });
+
+
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        generateQR();
 
     }
 }

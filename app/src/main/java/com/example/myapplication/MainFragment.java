@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,24 +72,24 @@ public class MainFragment extends Fragment {
         addAcc.setOnClickListener(listener);
 
 
+
         return v;
     }
 
     View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(getActivity(),AccidentActivity.class);
+            Intent intent = new Intent();
             switch (view.getId()) {
 
                 case R.id.joinAcc:
                     intent.putExtra("accident", "1");
-                    startActivity(intent);
+                    getParentFragmentManager().beginTransaction().replace(R.id.container,new ChatFragment()).addToBackStack(null).commit();
 
                     break;
                 case R.id.addAcc:
-                     intent = new Intent(getActivity(),AccidentActivity.class);
                     intent.putExtra("accident", "2");
-                    startActivity(intent);
+                    getParentFragmentManager().beginTransaction().replace(R.id.container,new AddAccidentFragment()).addToBackStack(null).commit();
 
                     break;
 

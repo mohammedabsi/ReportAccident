@@ -1,12 +1,36 @@
 package com.example.myapplication;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +38,18 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends Fragment {
+
+    TextInputEditText username_edt ,email_edt ,passord_edt ;
+    TextView joindate_tv ;
+    ImageView userQrCode ;
+
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    String userEmail = firebaseAuth.getCurrentUser().getEmail();
+
+
+
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,6 +95,47 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View v =  inflater.inflate(R.layout.fragment_profile, container, false);
+
+        username_edt = v.findViewById(R.id.username_edt);
+        email_edt = v.findViewById(R.id.email_edt);
+        passord_edt = v.findViewById(R.id.passord_edt);
+        joindate_tv = v.findViewById(R.id.joindate_tv);
+        userQrCode = v.findViewById(R.id.userQrCode);
+
+        firebaseFirestore.collection("User").document(userEmail).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+           if (task.isSuccessful()){
+               username_edt.setText(task.getResult().getString("userName"));
+               email_edt.setText(task.getResult().getString("email"));
+               passord_edt.setText(task.getResult().getString("password"));
+               joindate_tv.setText(task.getResult().getString("date"));
+
+               String myText = email_edt.getText().toString().trim();
+
+               //initializing MultiFormatWriter for QR code
+               MultiFormatWriter mWriter = new MultiFormatWriter();
+
+               try {
+                   //BitMatrix class to encode entered text and set Width &amp; Height
+                   BitMatrix mMatrix = mWriter.encode(myText, BarcodeFormat.QR_CODE, 120,120);
+
+                   BarcodeEncoder mEncoder = new BarcodeEncoder();
+                   Bitmap mBitmap = mEncoder.createBitmap(mMatrix);//creating bitmap of code
+                   userQrCode.setImageBitmap(mBitmap);//Setting generated QR code to imageView
+
+
+               } catch (WriterException e) {
+                   e.printStackTrace();
+               }
+
+           }
+            }
+        });
+
+
+        return v ;
+
     }
 }

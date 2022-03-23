@@ -18,8 +18,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class SignUpActivity extends AppCompatActivity {
-    private EditText emailEdt, passwordEdt, idNum;
+    private EditText emailEdt, passwordEdt, userName;
     private ProgressBar progressBarRegister;
 
     private FirebaseAuth mAuth;
@@ -35,7 +39,7 @@ public class SignUpActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         emailEdt = findViewById(R.id.emailEdt);
         passwordEdt = findViewById(R.id.passwordEdt);
-        idNum = findViewById(R.id.idNum);
+        userName = findViewById(R.id.userName);
         progressBarRegister = findViewById(R.id.progressBarRegister);
 
 
@@ -56,14 +60,14 @@ public class SignUpActivity extends AppCompatActivity {
     public void Register(View view) {
         closeKeyboard();
         progressBarRegister.setVisibility(View.VISIBLE);
-        String user_id = idNum.getText().toString().trim();
+        String user_name = userName.getText().toString().trim();
         String email = emailEdt.getText().toString().trim();
         String password = passwordEdt.getText().toString().trim();
 
 
-        if (user_id.isEmpty()) {
-            idNum.setError("Empty Field");
-            idNum.requestFocus();
+        if (user_name.isEmpty()) {
+            userName.setError("Empty Field");
+            userName.requestFocus();
             return;
         }
 
@@ -85,7 +89,8 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    User user = new User(user_id, password, email);
+                    String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                    User user = new User(user_name, password, email ,date);
                     firestore.collection("User").document(email).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {

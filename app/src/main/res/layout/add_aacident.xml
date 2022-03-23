@@ -1,30 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
+    android:layout_height="match_parent"
     android:backgroundTint="@android:color/darker_gray"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <ImageView
         android:id="@+id/userAvatarIv"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:scaleType="centerCrop"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_logo" />
+        android:src="@drawable/logo" />
 
-    <TextView
-        android:id="@+id/userAvatarTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="10dp"
-        android:gravity="center"
-        android:paddingBottom="10dp"
-        android:text="App Logo"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:textStyle="bold" />
 
 
     <EditText
@@ -32,55 +22,83 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:hint="Time"
         android:background="@drawable/input"
-        android:textStyle="bold"
+        android:hint=" click here current to set time automatically"
+        android:editable="false"
+        android:padding="15dp"
 
-        android:padding="15dp" />
+        android:textStyle="bold" />
+
 
     <EditText
-        android:id="@+id/date"
+        android:id="@+id/acident_address"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:hint="Date"
         android:background="@drawable/input"
-        android:inputType="datetime"
-        android:textStyle="bold"
-
-
-        android:padding="15dp" />
-
-    <EditText
-        android:id="@+id/address"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:hint="Address"
-        android:textStyle="bold"
-        android:background="@drawable/input"
+        android:hint="Accident Address"
         android:inputType="text"
-        android:padding="15dp" />
+        android:padding="15dp"
+        android:textStyle="bold" />
+
     <EditText
         android:id="@+id/carplate"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:hint="Car Plate"
-        android:textStyle="bold"
         android:background="@drawable/input"
+        android:hint="Car Plate"
         android:inputType="text"
-        android:padding="15dp" />
+        android:padding="15dp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:padding="5dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/idScanner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/input"
+            android:enabled="false"
+            android:layout_weight="2"
+            android:hint="Accident Id Member"
+            android:inputType="text"
+            android:padding="15dp"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/scannerBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:padding="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/input"
+            android:backgroundTint="@color/third_color"
+            android:src="@drawable/ic_qr"
+            android:elevation="5dp"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+    </LinearLayout>
+
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/add"
+        android:id="@+id/addAccident"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/input"
-        android:layout_margin="15dp"
         android:layout_gravity="center"
-        android:text="Add"
+        android:layout_margin="15dp"
+        android:background="@drawable/input"
         android:padding="15dp"
-        android:textStyle="bold"
+        android:text="Add"
+        android:textColor="@color/white"
 
-        android:textColor="@color/black" />
+        android:textStyle="bold" />
 </LinearLayout>

@@ -14,22 +14,9 @@
         android:id="@+id/userAvatarIv"
         android:layout_width="150dp"
         android:layout_height="150dp"
-
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_logo" />
+        android:src="@drawable/logo" />
 
-    <TextView
-        android:id="@+id/userAvatarTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="50dp"
-        android:gravity="center"
-        android:paddingBottom="10dp"
-        android:text="App Logo"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/emailEdt"
