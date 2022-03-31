@@ -2,14 +2,20 @@ package com.example.myapplication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +32,8 @@ public class SignInActivity extends AppCompatActivity {
 
     private EditText emailEdt ,passwordEdt ;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +45,14 @@ public class SignInActivity extends AppCompatActivity {
         passwordEdt = findViewById(R.id.passwordEdt);
 
 
+
     }
+
+
+
+
+
+
     public void goHome(View view) {
         closeKeyboard();
         progressBarlogin.setVisibility(View.VISIBLE);

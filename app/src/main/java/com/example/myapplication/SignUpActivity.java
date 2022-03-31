@@ -21,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 public class SignUpActivity extends AppCompatActivity {
     private EditText emailEdt, passwordEdt, userName;
@@ -30,10 +31,23 @@ public class SignUpActivity extends AppCompatActivity {
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
 
+    private static final Pattern PASSWORD_PATTERN =
+            Pattern.compile("^" +
+                    //"(?=.*[0-9])" +         //at least 1 digit
+                    //"(?=.*[a-z])" +         //at least 1 lower case letter
+                    //"(?=.*[A-Z])" +         //at least 1 upper case letter
+                    "(?=.*[a-zA-Z])" +      //any letter
+                    "(?=.*[@#$%^&+=])" +    //at least 1 special character
+                    "(?=\\S+$)" +           //no white spaces
+                    ".{4,}" +               //at least 4 characters
+                    "$");
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -68,6 +82,8 @@ public class SignUpActivity extends AppCompatActivity {
         if (user_name.isEmpty()) {
             userName.setError("Empty Field");
             userName.requestFocus();
+            progressBarRegister.setVisibility(View.INVISIBLE);
+
             return;
         }
 
@@ -75,42 +91,65 @@ public class SignUpActivity extends AppCompatActivity {
 
             passwordEdt.setError("The password should contain more than 6 symbols");
             passwordEdt.requestFocus();
+            progressBarRegister.setVisibility(View.INVISIBLE);
+
             return;
         }
         if (email.isEmpty()) {
             emailEdt.setError("Please provide valid email");
             emailEdt.requestFocus();
+            progressBarRegister.setVisibility(View.INVISIBLE);
+
             return;
 
         }
 
-        progressBarRegister.setVisibility(View.VISIBLE);
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-                    User user = new User(user_name, password, email ,date);
-                    firestore.collection("User").document(email).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                progressBarRegister.setVisibility(View.GONE);
-                                Toast.makeText(SignUpActivity.this, "Register success :)", Toast.LENGTH_SHORT).show();
-                                goHomeActivity();
-                            } else {
-                                Toast.makeText(SignUpActivity.this, "Register Failed :(", Toast.LENGTH_SHORT).show();
-                                progressBarRegister.setVisibility(View.GONE);
+        if (password.isEmpty()) {
+            passwordEdt.setError("Field can't be empty");
+            progressBarRegister.setVisibility(View.INVISIBLE);
 
 
+        }
+        else if (!PASSWORD_PATTERN.matcher(password).matches()) {
+            passwordEdt.setError("Password too weak");
+            progressBarRegister.setVisibility(View.INVISIBLE);
+
+
+        } else  {
+            if (!user_name.isEmpty()&& !email.isEmpty()){
+            passwordEdt.setError(null);
+            progressBarRegister.setVisibility(View.VISIBLE);
+            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                        User user = new User(user_name, password, email ,date);
+                        firestore.collection("User").document(email).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    progressBarRegister.setVisibility(View.GONE);
+                                    Toast.makeText(SignUpActivity.this, "Register success :)", Toast.LENGTH_SHORT).show();
+                                    goHomeActivity();
+                                } else {
+                                    Toast.makeText(SignUpActivity.this, "Register Failed :(", Toast.LENGTH_SHORT).show();
+                                    progressBarRegister.setVisibility(View.GONE);
+
+
+                                }
                             }
-                        }
-                    });
+                        });
 
 
+                    }
                 }
+            });
             }
-        });
+
+
+        }
+
 
 
     }
