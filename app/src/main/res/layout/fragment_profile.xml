@@ -36,7 +36,7 @@
             android:layout_margin="5dp"
             android:focusable="false"
 
-            android:hint="@string/user_name_edt"
+            android:hint="@string/user_id"
             app:boxStrokeColor="@color/teal_700"
             app:hintTextColor="@color/teal_700">
 

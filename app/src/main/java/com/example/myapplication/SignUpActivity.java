@@ -6,10 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -29,6 +33,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    private TextView generate_id;
 
 
     private static final Pattern PASSWORD_PATTERN =
@@ -49,12 +54,20 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 
 
-
         mAuth = FirebaseAuth.getInstance();
         emailEdt = findViewById(R.id.emailEdt);
         passwordEdt = findViewById(R.id.passwordEdt);
         userName = findViewById(R.id.userName);
         progressBarRegister = findViewById(R.id.progressBarRegister);
+        generate_id = findViewById(R.id.generate_id);
+        generate_id.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String uniqueID = UUID.randomUUID().toString();
+                userName.setText(uniqueID);
+
+            }
+        });
 
 
     }
@@ -109,47 +122,57 @@ public class SignUpActivity extends AppCompatActivity {
             progressBarRegister.setVisibility(View.INVISIBLE);
 
 
-        }
-        else if (!PASSWORD_PATTERN.matcher(password).matches()) {
-            passwordEdt.setError("Password too weak");
+        } else if (!PASSWORD_PATTERN.matcher(password).matches()) {
+            passwordEdt.setError("Password too weak , Add Upper Case and special symbols");
             progressBarRegister.setVisibility(View.INVISIBLE);
 
 
-        } else  {
-            if (!user_name.isEmpty()&& !email.isEmpty()){
-            passwordEdt.setError(null);
-            progressBarRegister.setVisibility(View.VISIBLE);
-            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-                        User user = new User(user_name, password, email ,date);
-                        firestore.collection("User").document(email).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    progressBarRegister.setVisibility(View.GONE);
-                                    Toast.makeText(SignUpActivity.this, "Register success :)", Toast.LENGTH_SHORT).show();
-                                    goHomeActivity();
-                                } else {
-                                    Toast.makeText(SignUpActivity.this, "Register Failed :(", Toast.LENGTH_SHORT).show();
-                                    progressBarRegister.setVisibility(View.GONE);
+        } else {
+            if (!user_name.isEmpty() && !email.isEmpty()) {
+                if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+
+                    passwordEdt.setError(null);
+                    progressBarRegister.setVisibility(View.VISIBLE);
 
 
-                                }
+                    mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                                User user = new User(user_name, password, email, date);
+                                firestore.collection("User").document(email).set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            progressBarRegister.setVisibility(View.GONE);
+                                            Toast.makeText(SignUpActivity.this, "Register success :)", Toast.LENGTH_SHORT).show();
+                                            goHomeActivity();
+                                        } else {
+                                            Toast.makeText(SignUpActivity.this, "Register Failed :(", Toast.LENGTH_SHORT).show();
+                                            progressBarRegister.setVisibility(View.GONE);
+
+
+                                        }
+                                    }
+                                });
+
+
                             }
-                        });
-
-
-                    }
+                        }
+                    });
                 }
-            });
+                else {
+                    emailEdt.setError("Please provide valid email");
+                    progressBarRegister.setVisibility(View.INVISIBLE);
+
+                }
+
+
             }
 
 
         }
-
 
 
     }

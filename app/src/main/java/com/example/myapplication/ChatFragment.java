@@ -177,6 +177,14 @@ public class ChatFragment extends Fragment {
         firstList.add("c");
         firstList.add("d");
 
+        if (user_id2.getText().toString().trim().isEmpty()){
+
+
+
+        }else {
+
+        }
+
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Image Upload....");
 
@@ -217,10 +225,10 @@ public class ChatFragment extends Fragment {
         mButtonSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String message = mEditTextMessage.getText().toString();
+                String message = mEditTextMessage.getText().toString().trim();
                mEditTextMessage.getText().clear();
 
-                if (user_id2.getText().toString() != null) {
+                if (!user_id2.getText().toString().trim().isEmpty()) {
                     mListView.setSelection(mAdapter.getCount() - 1);
                     if (message.contains("ok") || message.contains("yes") || message.contains("a") || message.contains("b") || message.contains("c") || message.contains("d")) {
                         counter++;
@@ -233,7 +241,18 @@ public class ChatFragment extends Fragment {
                     sendMessage(message, counter);
 
                 } else {
-                    Toast.makeText(getActivity(), "U should scan the code for second partner first", Toast.LENGTH_SHORT).show();
+                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                    alertDialog.setTitle("Alert");
+                    alertDialog.setMessage("You Should Scan Qr code First ");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+
+                                }
+                            });
+                    alertDialog.show();
+
                 }
             }
         });
