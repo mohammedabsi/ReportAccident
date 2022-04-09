@@ -33,7 +33,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-    private TextView generate_id;
 
 
     private static final Pattern PASSWORD_PATTERN =
@@ -59,15 +58,7 @@ public class SignUpActivity extends AppCompatActivity {
         passwordEdt = findViewById(R.id.passwordEdt);
         userName = findViewById(R.id.userName);
         progressBarRegister = findViewById(R.id.progressBarRegister);
-        generate_id = findViewById(R.id.generate_id);
-        generate_id.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String uniqueID = UUID.randomUUID().toString();
-                userName.setText(uniqueID);
 
-            }
-        });
 
 
     }

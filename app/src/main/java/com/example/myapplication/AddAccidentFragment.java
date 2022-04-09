@@ -20,10 +20,14 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.budiyev.android.codescanner.CodeScanner;
@@ -34,6 +38,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,7 +53,7 @@ import java.util.List;
  */
 public class AddAccidentFragment extends Fragment {
     AppCompatButton addAccident;
-    ImageButton scannerBtn;
+    TextView scannerBtn ,generate_time;
     EditText idScanner, time, acident_address, carplate;
   //  private SharedViewModel viewModel;
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -107,8 +113,9 @@ public class AddAccidentFragment extends Fragment {
         time = v.findViewById(R.id.time);
         carplate = v.findViewById(R.id.carplate);
         acident_address = v.findViewById(R.id.acident_address);
+        generate_time = v.findViewById(R.id.generate_time);
 
-
+        setHasOptionsMenu(false);
 
         scannerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,7 +131,7 @@ public class AddAccidentFragment extends Fragment {
             }
         });
 
-        time.setOnClickListener(new View.OnClickListener() {
+        generate_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Date today = new Date();
@@ -148,49 +155,57 @@ public class AddAccidentFragment extends Fragment {
         return v;
     }
 
-//    @Override
-//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-////        viewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
-////        viewModel.getText().observe(getViewLifecycleOwner(), new Observer<CharSequence>() {
-////            @Override
-////            public void onChanged(@Nullable CharSequence charSequence) {
-////               // idScanner.setText(charSequence);
-////            }
-////        });
-//    }
-
 
 
     private void CreateAccident() {
-        String acc_time = time.getText().toString();
-        String acc_add = acident_address.getText().toString();
-        String car_plt = carplate.getText().toString();
-        String second_id = idScanner.getText().toString();
+        String acc_time = time.getText().toString().trim();
+        String acc_add = acident_address.getText().toString().trim();
+        String car_plt = carplate.getText().toString().trim();
+        String second_id = idScanner.getText().toString().trim();
 
         AccidentDetails accidentDetails = new AccidentDetails(acc_time, acc_add, car_plt, second_id, currentemail);
 
-        firestore.collection("Accident").document(currentemail + "," + second_id).collection(currentemail).document().set(accidentDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
+        if (!acc_time.isEmpty()){
+            if (!acc_add.isEmpty()){
+                if (!car_plt.isEmpty()){
+                    if (!second_id.isEmpty()){
 
-                if (task.isSuccessful()) {
+                        firestore.collection("Accident").document(currentemail + "," + second_id).collection(currentemail).document().set(accidentDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
 
-                    //jump to next fragment
-                    Bundle bundle = new Bundle();
-                    bundle.putString("idkey", idScanner.getText().toString()); // Put anything what you want
-                    bundle.putString("id", "1"); // Put anything what you want
+                                if (task.isSuccessful()) {
 
-                    ChatFragment fragment2 = new ChatFragment();
-                    fragment2.setArguments(bundle);
+                                    //jump to next fragment
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("idkey", idScanner.getText().toString()); // Put anything what you want
+                                    bundle.putString("id", "1"); // Put anything what you want
 
-                    getParentFragmentManager().beginTransaction().replace(R.id.container, fragment2).commit();
+                                    ChatFragment fragment2 = new ChatFragment();
+                                    fragment2.setArguments(bundle);
 
-                } else {
-                    Toast.makeText(getActivity(), "Something went wrong , try again later ...", Toast.LENGTH_SHORT).show();
+                                    getParentFragmentManager().beginTransaction().replace(R.id.container, fragment2).commit();
+
+                                } else {
+                                    Toast.makeText(getActivity(), "Something went wrong , try again later ...", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+
+                    }else {
+                        idScanner.setError("Fill Empty Field");
+                    }
+                }else {
+                    carplate.setError("Fill Empty Field");
                 }
+            }else {
+                acident_address.setError("Fill Empty Field");
             }
-        });
+        }else {
+            time.setError("Fill Empty field");
+        }
+
 
 
     }

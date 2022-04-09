@@ -11,24 +11,76 @@
         android:id="@+id/userAvatarIv"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:scaleType="centerCrop"
         android:layout_gravity="center_horizontal"
+        android:scaleType="centerCrop"
         android:src="@drawable/logo" />
 
-
-
-    <EditText
-        android:id="@+id/time"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/input"
-        android:hint=" click here current to set time automatically"
-        android:editable="false"
-        android:padding="15dp"
+        android:orientation="horizontal">
 
-        android:textStyle="bold" />
+        <EditText
+            android:id="@+id/idScanner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/input"
+            android:editable="false"
+            android:enabled="false"
+            android:gravity="center"
+            android:hint="Accident Id Member"
+            android:inputType="text"
+            android:padding="15dp"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/scannerBtn"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/input"
+            android:backgroundTint="@color/secondry_color"
+            android:gravity="center"
+            android:text="QR"
+            android:textColor="@color/primary_color" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/input"
+            android:editable="false"
+            android:enabled="false"
+            android:gravity="center"
+            android:hint="Accident Time"
+            android:padding="15dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/generate_time"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/input"
+            android:backgroundTint="@color/secondry_color"
+            android:gravity="center"
+            android:text="time"
+            android:textColor="@color/primary_color" />
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/acident_address"
@@ -52,42 +104,6 @@
         android:padding="15dp"
         android:textStyle="bold" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:padding="5dp"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/idScanner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/input"
-            android:enabled="false"
-            android:layout_weight="2"
-            android:hint="Accident Id Member"
-            android:inputType="text"
-            android:padding="15dp"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
-
-        <ImageButton
-            android:id="@+id/scannerBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
-            android:padding="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/input"
-            android:backgroundTint="@color/third_color"
-            android:src="@drawable/ic_qr"
-            android:elevation="5dp"
-            tools:ignore="SpeakableTextPresentCheck" />
-
-    </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/addAccident"

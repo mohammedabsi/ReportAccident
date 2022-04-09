@@ -37,8 +37,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp"
-                android:editable="false"
-                android:enabled="false"
                 android:inputType="text"
                 android:textColor="@color/black"
                 android:padding="15dp"
@@ -47,16 +45,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <TextView
-            android:id="@+id/generate_id"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="5dp"
-            android:background="@drawable/input"
-            android:backgroundTint="@color/secondry_color"
-            android:gravity="center"
-            android:text="id"
-            android:textColor="@color/primary_color" />
+
 
     </LinearLayout>
 

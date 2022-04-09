@@ -40,6 +40,17 @@
         app:layout_constraintBottom_toTopOf="@+id/emailEdt"
         app:layout_constraintStart_toStartOf="parent">
 
+        <ImageView
+            android:id="@+id/add_Accidentdetails2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:src="@drawable/ic_add_details"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
@@ -60,14 +71,14 @@
             app:layout_constraintTop_toTopOf="parent"
              />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/qr_imageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_qr"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/add_Accidentdetails2"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

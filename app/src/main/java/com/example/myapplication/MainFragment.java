@@ -72,7 +72,6 @@ public class MainFragment extends Fragment {
         addAcc.setOnClickListener(listener);
 
 
-
         return v;
     }
 
@@ -84,12 +83,12 @@ public class MainFragment extends Fragment {
 
                 case R.id.joinAcc:
                     intent.putExtra("accident", "1");
-                    getParentFragmentManager().beginTransaction().replace(R.id.container,new ChatFragment()).addToBackStack(null).commit();
+                    getParentFragmentManager().beginTransaction().replace(R.id.container, new ChatFragment()).addToBackStack(null).commit();
 
                     break;
                 case R.id.addAcc:
                     intent.putExtra("accident", "2");
-                    getParentFragmentManager().beginTransaction().replace(R.id.container,new AddAccidentFragment()).addToBackStack(null).commit();
+                    getParentFragmentManager().beginTransaction().replace(R.id.container, new AddAccidentFragment()).addToBackStack(null).commit();
 
                     break;
 

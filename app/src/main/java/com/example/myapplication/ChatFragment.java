@@ -62,8 +62,10 @@ import com.google.firebase.firestore.util.FileUtil;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Date;
 import java.util.List;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -90,11 +92,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * create an instance of this fragment.
  */
 public class ChatFragment extends Fragment {
-    ImageButton mButtonSend, qr_imageButton;
+    ImageButton mButtonSend;
+    ImageView qr_imageButton , add_Accidentdetails2 ;
     private ListView mListView;
     private ArrayList<ChatMessage> chatMessageArrayList;
     private EditText mEditTextMessage;
     private ImageView mImageView;
+
     private ChatMessageAdapter mAdapter;
     private TextView user_id2;
     private SharedViewModel viewModel;
@@ -124,7 +128,13 @@ public class ChatFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private Dialog dialog;
+    private Dialog dialog , details_dialog;
+    private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    String currentemail = firebaseAuth.getCurrentUser().getEmail();
+
+
+
 
     ImageView openCam_img;
 
@@ -171,19 +181,21 @@ public class ChatFragment extends Fragment {
         mListView = v.findViewById(R.id.mListView);
         mImageView = v.findViewById(R.id.iv_image);
         user_id2 = v.findViewById(R.id.user_id2);
+        add_Accidentdetails2 = v.findViewById(R.id.add_Accidentdetails2);
         qr_imageButton = v.findViewById(R.id.qr_imageButton);
         firstList.add("a");
         firstList.add("b");
         firstList.add("c");
         firstList.add("d");
 
-        if (user_id2.getText().toString().trim().isEmpty()){
 
 
-
-        }else {
-
-        }
+        add_Accidentdetails2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDetailsDialog();
+            }
+        });
 
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Image Upload....");
@@ -194,7 +206,6 @@ public class ChatFragment extends Fragment {
 
         mAdapter = new ChatMessageAdapter(getActivity(), chatMessageArrayList);
         mListView.setAdapter(mAdapter);
-
 
 
         openCam_img = dialog.findViewById(R.id.openCam_img);
@@ -226,10 +237,11 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String message = mEditTextMessage.getText().toString().trim();
-               mEditTextMessage.getText().clear();
+                mEditTextMessage.getText().clear();
 
                 if (!user_id2.getText().toString().trim().isEmpty()) {
                     mListView.setSelection(mAdapter.getCount() - 1);
+                    dialog.dismiss();
                     if (message.contains("ok") || message.contains("yes") || message.contains("a") || message.contains("b") || message.contains("c") || message.contains("d")) {
                         counter++;
 
@@ -257,11 +269,13 @@ public class ChatFragment extends Fragment {
             }
         });
 
-//        getQuestions();
+
 
 
         return v;
     }
+
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -271,6 +285,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onChanged(@Nullable CharSequence charSequence) {
                 user_id2.setText(charSequence);
+
             }
         });
     }
@@ -313,13 +328,17 @@ public class ChatFragment extends Fragment {
         }
         if (count == 6) {
             secondList.add(message);
-           // chatMessageArrayList.clear();
+            // chatMessageArrayList.clear();
             IntStream.range(0, firstList.size()).forEach(i -> {
                 double x = 1;
 
                 if (firstList.get(i).equals(secondList.get(i))) {
                     thirdList.add(secondList.get(i));
                     System.out.println(thirdList);
+
+
+
+
 
                 }
 
@@ -354,6 +373,88 @@ public class ChatFragment extends Fragment {
         mAdapter.add(chatMessage);
     }
 
+    private void showDetailsDialog() {
+        details_dialog = new Dialog(getActivity());
+        details_dialog.setContentView(R.layout.adddetails_dialog);
+
+        details_dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        details_dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        details_dialog.setCancelable(false);
+        details_dialog.show();
+
+        TextView generate_time_dialog = details_dialog.findViewById(R.id.generate_time_dialog);
+        EditText acident_address_dialog = details_dialog.findViewById(R.id.acident_address_dialog);
+        EditText carplate_dialog = details_dialog.findViewById(R.id.carplate_dialog);
+        EditText time_dialog = details_dialog.findViewById(R.id.time_dialog);
+        Button uploadAcc_btn_dialog = details_dialog.findViewById(R.id.uploadAcc_btn_dialog);
+        Button cancel_dialog = details_dialog.findViewById(R.id.cancel_dialog);
+
+
+        generate_time_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Date today = new Date();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd , hh:mm:ss a");
+                String dateToStr = format.format(today);
+                time_dialog.setText(dateToStr);
+            }
+        });
+        uploadAcc_btn_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!acident_address_dialog.getText().toString().trim().isEmpty()){
+                    if (!time_dialog.getText().toString().trim().isEmpty()){
+                        if (!carplate_dialog.getText().toString().trim().isEmpty()){
+                            AccidentDetails accidentDetails = new AccidentDetails(time_dialog.getText().toString().trim(), acident_address_dialog.getText().toString().trim(), carplate_dialog.getText().toString().trim(), user_id2.getText().toString().trim(), currentemail);
+
+
+                            //Todo : add accident details for second part
+
+                            firestore.collection("Accident").document(user_id2.getText().toString().trim()+ "," +  currentemail ).collection(currentemail).document().set(accidentDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                    if (task.isSuccessful()) {
+
+                                        Toast.makeText(getActivity(), "Success", Toast.LENGTH_SHORT).show();
+                                        details_dialog.dismiss();
+                                        add_Accidentdetails2.setVisibility(View.GONE);
+
+
+
+                                    } else {
+                                        Toast.makeText(getActivity(), "Something went wrong , try again later ...", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+
+
+                        }else {
+                            carplate_dialog.setError("Empty field !");
+                        }
+                    }else {
+                        time_dialog.setError("Empty field , generate time");
+                    }
+                }else {
+                    acident_address_dialog.setError("Empty Field");
+                }
+
+
+            }
+        });
+        cancel_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                details_dialog.dismiss();
+            }
+        });
+
+
+
+
+
+    }
+
     public void showDialog() {
         dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.uploadimg_dialog);
@@ -364,29 +465,36 @@ public class ChatFragment extends Fragment {
         dialog.show();
         AppCompatButton cancel = dialog.findViewById(R.id.cancel);
         ImageView openCam_img = dialog.findViewById(R.id.openCam_img);
+        TextView img_toimgview = dialog.findViewById(R.id.img_toimgview);
         AppCompatButton uploadAcc_btn = dialog.findViewById(R.id.uploadAcc_btn);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
-                mimicOtherMessage("hello this is your assistant bot \n if you didnt get the other part Id please scan his code with the button shown down \n if you get the id then it must be shown at bottom of the chats \n type yes to start the chat bot");
+                if (openCam_img.getDrawable() == null) {
+                    dialog.dismiss();
+                //  getParentFragmentManager().beginTransaction().replace(R.id.container,new MainFragment()).commit();
 
-//                startActivity(new Intent(getActivity(), MainActivity.class));
-//                getActivity().finish();
+                    Toast.makeText(getActivity(), "You cant start chatbot before uploading image", Toast.LENGTH_SHORT).show();
+
+                }else {
+                    dialog.dismiss();
+               //     getParentFragmentManager().beginTransaction().replace(R.id.container,new MainFragment()).commit();
+                }
+
 
             }
         });
         uploadAcc_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressDialog.show();
                 mimicOtherMessage("hello this is your assistant bot \n if you didnt get the other part Id please scan his code with the button shown down \n if you get the id then it must be shown at bottom of the chats \n type yes to start the chat bot");
 
-                ImageUpload();
-                //dialog.dismiss();
+
             }
         });
 
-        openCam_img.setOnClickListener(new View.OnClickListener() {
+        img_toimgview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Open camera
@@ -408,20 +516,10 @@ public class ChatFragment extends Fragment {
         switch (requestCode) {
             case CAPTURE_REQUEST_CODE: {
                 if (resultCode == RESULT_OK) {
-//            get capture image
-                    // Uri path = data.getData();
+
 
                     Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                    // set CApture Image To image view
-                    Uri uri = data.getData();
-                    Context context = getActivity();
-                    path = RealPathUtil.getRealPath(context, uri);
-
                     openCam_img.setImageBitmap(bitmap);
-
-                    progressDialog.show();
-
-                    //todo: upload image from camera to server directly
 
 
                 }
@@ -448,15 +546,7 @@ public class ChatFragment extends Fragment {
         call.enqueue(new Callback<AddPhoto>() {
             @Override
             public void onResponse(Call<AddPhoto> call, Response<AddPhoto> response) {
-//                if (response.isSuccessful()){
-//                    if (response.body().getStatus().toString.equals("200")){
-//                        Log.d("TAG", "success: " + response.body());
-//
-//                    }else {
-//                        Log.d("TAG", "falied: " + response.body());
-//
-//                    }
-//                }
+
             }
 
             @Override
@@ -465,18 +555,6 @@ public class ChatFragment extends Fragment {
 
             }
         });
-
-      //  String image = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
-//create a file to write bitmap data
-
-
-
-
-
-
-
-
-
 
 
     }
@@ -494,9 +572,17 @@ public class ChatFragment extends Fragment {
         if (args != null) {
             if (args.getString("id").equalsIgnoreCase("1")) {
                 user_id2.setText(args.getString("idkey"));
+                dialog.dismiss();
+                add_Accidentdetails2.setVisibility(View.VISIBLE);
+
+
+
 
             } else if (args.getString("id").equalsIgnoreCase("2")) {
                 user_id2.setText(args.getString("qrscan"));
+                dialog.dismiss();
+                add_Accidentdetails2.setVisibility(View.VISIBLE);
+
                 Log.d("moham", "onCreateView: " + args.getString("qrscan"));
             }
         }
@@ -542,7 +628,7 @@ public class ChatFragment extends Fragment {
                             }
                         })
                         .create()
-                        .show();
+                       .show();
 
 
             } else {
