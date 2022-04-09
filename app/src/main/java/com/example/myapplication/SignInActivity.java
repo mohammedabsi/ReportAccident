@@ -66,11 +66,15 @@ public class SignInActivity extends AppCompatActivity {
         if (email.isEmpty()) {
             emailEdt.setError("Enter e-mail");
             emailEdt.requestFocus();
+            progressBarlogin.setVisibility(View.INVISIBLE);
+
             return;
         }
         if (password.isEmpty()) {
             passwordEdt.setError("Enter e-mail");
             passwordEdt.setError("Enter your password");
+            progressBarlogin.setVisibility(View.INVISIBLE);
+
             return;
         }
 
