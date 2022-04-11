@@ -11,6 +11,10 @@ import retrofit2.http.Part;
 public interface UploadApis {
     @Multipart
     @POST("store_photo")
-    Call<AddPhoto> uploadImage(@Part MultipartBody.Part photo);
+    Call<AddPhoto> uploadImage(
+            @Part MultipartBody.Part photo ,
+    @Part("email") RequestBody email
+
+            );
 
 }

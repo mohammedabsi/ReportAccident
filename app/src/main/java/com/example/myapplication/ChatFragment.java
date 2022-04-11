@@ -3,6 +3,7 @@ package com.example.myapplication;
 import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -58,6 +59,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.util.FileUtil;
+import com.squareup.picasso.Picasso;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -74,6 +76,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
+
+import javax.xml.namespace.QName;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -93,7 +97,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class ChatFragment extends Fragment {
     ImageButton mButtonSend;
-    ImageView qr_imageButton , add_Accidentdetails2 ;
+    ImageView qr_imageButton, add_Accidentdetails2;
     private ListView mListView;
     private ArrayList<ChatMessage> chatMessageArrayList;
     private EditText mEditTextMessage;
@@ -106,7 +110,7 @@ public class ChatFragment extends Fragment {
     ArrayList<String> firstList = new ArrayList<String>();
     List<String> secondList = new ArrayList<String>();
     List<String> thirdList = new ArrayList<String>();
-    private UploadApis uploadApis;
+    // private UploadApis uploadApis;
     private ProgressDialog progressDialog;
 
 
@@ -128,15 +132,14 @@ public class ChatFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private Dialog dialog , details_dialog;
+    private Dialog dialog, details_dialog;
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     String currentemail = firebaseAuth.getCurrentUser().getEmail();
 
 
-
-
     ImageView openCam_img;
+
 
     public ChatFragment() {
         // Required empty public constructor
@@ -187,7 +190,7 @@ public class ChatFragment extends Fragment {
         firstList.add("b");
         firstList.add("c");
         firstList.add("d");
-
+        showDialog();
 
 
         add_Accidentdetails2.setOnClickListener(new View.OnClickListener() {
@@ -202,7 +205,7 @@ public class ChatFragment extends Fragment {
 
         chatMessageArrayList = new ArrayList<ChatMessage>();
 
-        showDialog();
+
 
         mAdapter = new ChatMessageAdapter(getActivity(), chatMessageArrayList);
         mListView.setAdapter(mAdapter);
@@ -270,11 +273,8 @@ public class ChatFragment extends Fragment {
         });
 
 
-
-
         return v;
     }
-
 
 
     @Override
@@ -335,9 +335,6 @@ public class ChatFragment extends Fragment {
                 if (firstList.get(i).equals(secondList.get(i))) {
                     thirdList.add(secondList.get(i));
                     System.out.println(thirdList);
-
-
-
 
 
                 }
@@ -402,15 +399,15 @@ public class ChatFragment extends Fragment {
         uploadAcc_btn_dialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!acident_address_dialog.getText().toString().trim().isEmpty()){
-                    if (!time_dialog.getText().toString().trim().isEmpty()){
-                        if (!carplate_dialog.getText().toString().trim().isEmpty()){
+                if (!acident_address_dialog.getText().toString().trim().isEmpty()) {
+                    if (!time_dialog.getText().toString().trim().isEmpty()) {
+                        if (!carplate_dialog.getText().toString().trim().isEmpty()) {
                             AccidentDetails accidentDetails = new AccidentDetails(time_dialog.getText().toString().trim(), acident_address_dialog.getText().toString().trim(), carplate_dialog.getText().toString().trim(), user_id2.getText().toString().trim(), currentemail);
 
 
                             //Todo : add accident details for second part
 
-                            firestore.collection("Accident").document(user_id2.getText().toString().trim()+ "," +  currentemail ).collection(currentemail).document().set(accidentDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            firestore.collection("Accident").document(user_id2.getText().toString().trim() + "," + currentemail).collection(currentemail).document().set(accidentDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
 
@@ -421,7 +418,6 @@ public class ChatFragment extends Fragment {
                                         add_Accidentdetails2.setVisibility(View.GONE);
 
 
-
                                     } else {
                                         Toast.makeText(getActivity(), "Something went wrong , try again later ...", Toast.LENGTH_SHORT).show();
                                     }
@@ -429,13 +425,13 @@ public class ChatFragment extends Fragment {
                             });
 
 
-                        }else {
+                        } else {
                             carplate_dialog.setError("Empty field !");
                         }
-                    }else {
+                    } else {
                         time_dialog.setError("Empty field , generate time");
                     }
-                }else {
+                } else {
                     acident_address_dialog.setError("Empty Field");
                 }
 
@@ -450,19 +446,17 @@ public class ChatFragment extends Fragment {
         });
 
 
-
-
-
     }
 
     public void showDialog() {
-        dialog = new Dialog(getActivity());
+        dialog =  new Dialog(getActivity());
         dialog.setContentView(R.layout.uploadimg_dialog);
 
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
         dialog.setCancelable(false);
         dialog.show();
+
         AppCompatButton cancel = dialog.findViewById(R.id.cancel);
         ImageView openCam_img = dialog.findViewById(R.id.openCam_img);
         TextView img_toimgview = dialog.findViewById(R.id.img_toimgview);
@@ -472,13 +466,12 @@ public class ChatFragment extends Fragment {
             public void onClick(View view) {
                 if (openCam_img.getDrawable() == null) {
                     dialog.dismiss();
-                //  getParentFragmentManager().beginTransaction().replace(R.id.container,new MainFragment()).commit();
 
                     Toast.makeText(getActivity(), "You cant start chatbot before uploading image", Toast.LENGTH_SHORT).show();
 
-                }else {
+                } else {
                     dialog.dismiss();
-               //     getParentFragmentManager().beginTransaction().replace(R.id.container,new MainFragment()).commit();
+
                 }
 
 
@@ -488,7 +481,10 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 progressDialog.show();
-                mimicOtherMessage("hello this is your assistant bot \n if you didnt get the other part Id please scan his code with the button shown down \n if you get the id then it must be shown at bottom of the chats \n type yes to start the chat bot");
+                ImageUpload(currentemail);
+                  mimicOtherMessage("hello this is your assistant bot \n if you didnt get the other part Id please scan his code with the button shown down \n if you get the id then it must be shown at bottom of the chats \n type yes to start the chat bot");
+                dialog.dismiss();
+
 
 
             }
@@ -498,9 +494,16 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //Open camera
-                if (CheckPermission()) {
-                    Intent capture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(capture, CAPTURE_REQUEST_CODE);
+                if (ContextCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ) == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(intent,10);
+                }else {
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 }
             }
         });
@@ -513,44 +516,58 @@ public class ChatFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (requestCode) {
-            case CAPTURE_REQUEST_CODE: {
-                if (resultCode == RESULT_OK) {
 
 
-                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                if (requestCode == 10 && resultCode == RESULT_OK ) {
+
+Uri uri = data.getData();
+Context context = getActivity();
+path =RealPathUtil.getRealPath(context, uri);
+
+                    Bitmap bitmap = BitmapFactory.decodeFile(path);
                     openCam_img.setImageBitmap(bitmap);
 
 
                 }
-            }
-            break;
 
-        }
     }
 
-    private void ImageUpload() {
+    private void ImageUpload(String email) {
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://165.232.90.241/api/").addConverterFactory(GsonConverterFactory.create()).build();
-        uploadApis = retrofit.create(UploadApis.class);
 
 
         File file = new File(path);
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
 
         MultipartBody.Part body = MultipartBody.Part.createFormData("photo", file.getName(), requestFile);
+        RequestBody req_email = RequestBody.create(MediaType.parse("multipart/form-data"), email);
+        UploadApis uploadApis = retrofit.create(UploadApis.class);
 
 
-        Call<AddPhoto> call = uploadApis.uploadImage(body);
+        Call<AddPhoto> call = uploadApis.uploadImage(body, req_email);
 
         call.enqueue(new Callback<AddPhoto>() {
             @Override
             public void onResponse(Call<AddPhoto> call, Response<AddPhoto> response) {
+                if (response.isSuccessful()) {
+                    if (response.body().getCode().toString().equalsIgnoreCase("200")) {
+                        Toast.makeText(getActivity(), "Upload success", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
 
+                    } else {
+                        Toast.makeText(getActivity(), "Upload failed", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+
+                    }
+                }
             }
 
             @Override
             public void onFailure(Call<AddPhoto> call, Throwable t) {
+                Toast.makeText(getActivity(), t.getLocalizedMessage().toString(), Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+
                 Log.d("TAG", "failedresponse: " + t.toString());
 
             }
@@ -572,15 +589,14 @@ public class ChatFragment extends Fragment {
         if (args != null) {
             if (args.getString("id").equalsIgnoreCase("1")) {
                 user_id2.setText(args.getString("idkey"));
-                dialog.dismiss();
-                add_Accidentdetails2.setVisibility(View.VISIBLE);
-
-
+              //  dialog.dismiss();
+                add_Accidentdetails2.setVisibility(View.GONE);
+               // add_Accidentdetails2.setVisibility(View.VISIBLE);
 
 
             } else if (args.getString("id").equalsIgnoreCase("2")) {
                 user_id2.setText(args.getString("qrscan"));
-                dialog.dismiss();
+               // dialog.dismiss();
                 add_Accidentdetails2.setVisibility(View.VISIBLE);
 
                 Log.d("moham", "onCreateView: " + args.getString("qrscan"));
@@ -599,49 +615,5 @@ public class ChatFragment extends Fragment {
 
     }
 
-    public boolean CheckPermission() {
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.READ_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.CAMERA) || ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                new AlertDialog.Builder(getActivity())
-                        .setTitle("Permission")
-                        .setMessage("Please accept the permissions")
-                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                //Prompt the user once explanation has been shown
-                                ActivityCompat.requestPermissions(getActivity(),
-                                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                        MY_PERMISSIONS_REQUEST_LOCATION);
 
-
-                                startActivity(new Intent(getActivity(), MainActivity.class));
-                                getActivity().overridePendingTransition(0, 0);
-                            }
-                        })
-                        .create()
-                       .show();
-
-
-            } else {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-
-            return false;
-        } else {
-
-            return true;
-
-        }
-    }
 }

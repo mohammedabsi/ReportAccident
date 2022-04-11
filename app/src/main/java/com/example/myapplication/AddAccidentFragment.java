@@ -1,10 +1,18 @@
 package com.example.myapplication;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -27,6 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,10 +50,20 @@ import com.google.zxing.integration.android.IntentResult;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,6 +78,7 @@ public class AddAccidentFragment extends Fragment {
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     String currentemail = firebaseAuth.getCurrentUser().getEmail();
+
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -145,7 +165,9 @@ public class AddAccidentFragment extends Fragment {
         addAccident.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CreateAccident();
+
+               CreateAccident();
+
 
 
             }
@@ -154,6 +176,7 @@ public class AddAccidentFragment extends Fragment {
 
         return v;
     }
+
 
 
 
@@ -180,6 +203,7 @@ public class AddAccidentFragment extends Fragment {
                                     Bundle bundle = new Bundle();
                                     bundle.putString("idkey", idScanner.getText().toString()); // Put anything what you want
                                     bundle.putString("id", "1"); // Put anything what you want
+                                    bundle.putString("dialog", "1"); // Put anything what you want
 
                                     ChatFragment fragment2 = new ChatFragment();
                                     fragment2.setArguments(bundle);
