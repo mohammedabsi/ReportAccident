@@ -45,8 +45,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import org.w3c.dom.Text;
 
@@ -74,6 +79,7 @@ public class AddAccidentFragment extends Fragment {
     AppCompatButton addAccident;
     TextView scannerBtn ,generate_time;
     EditText idScanner, time, acident_address, carplate;
+    ImageView userAvatarIv ;
   //  private SharedViewModel viewModel;
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -128,12 +134,29 @@ public class AddAccidentFragment extends Fragment {
         View v = inflater.inflate(R.layout.add_aacident, container, false);
         addAccident = v.findViewById(R.id.addAccident);
         scannerBtn = v.findViewById(R.id.scannerBtn);
+        userAvatarIv = v.findViewById(R.id.userAvatarIv);
 
         idScanner = v.findViewById(R.id.idScanner);
         time = v.findViewById(R.id.time);
         carplate = v.findViewById(R.id.carplate);
         acident_address = v.findViewById(R.id.acident_address);
         generate_time = v.findViewById(R.id.generate_time);
+
+        //initializing MultiFormatWriter for QR code
+        MultiFormatWriter mWriter = new MultiFormatWriter();
+
+        try {
+            //BitMatrix class to encode entered text and set Width &amp; Height
+            BitMatrix mMatrix = mWriter.encode(currentemail, BarcodeFormat.QR_CODE, 120,120);
+
+            BarcodeEncoder mEncoder = new BarcodeEncoder();
+            Bitmap mBitmap = mEncoder.createBitmap(mMatrix);//creating bitmap of code
+            userAvatarIv.setImageBitmap(mBitmap);//Setting generated QR code to imageView
+
+
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
 
         setHasOptionsMenu(false);
 

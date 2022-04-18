@@ -30,6 +30,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
 import android.os.FileUtils;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -201,10 +203,9 @@ public class ChatFragment extends Fragment {
         });
 
         progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Image Upload....");
+        progressDialog.setMessage("Image Upload.... , Please wait for your result");
 
         chatMessageArrayList = new ArrayList<ChatMessage>();
-
 
 
         mAdapter = new ChatMessageAdapter(getActivity(), chatMessageArrayList);
@@ -449,7 +450,7 @@ public class ChatFragment extends Fragment {
     }
 
     public void showDialog() {
-        dialog =  new Dialog(getActivity());
+        dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.uploadimg_dialog);
 
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -482,9 +483,21 @@ public class ChatFragment extends Fragment {
             public void onClick(View view) {
                 progressDialog.show();
                 ImageUpload(currentemail);
-                  mimicOtherMessage("hello this is your assistant bot \n if you didnt get the other part Id please scan his code with the button shown down \n if you get the id then it must be shown at bottom of the chats \n type yes to start the chat bot");
+                mimicOtherMessage("hello this is your assistant bot \n if you didnt get the other part Id please scan his code with the button shown down \n if you get the id then it must be shown at bottom of the chats \n type yes to start the chat bot");
                 dialog.dismiss();
+                // progressDialog.show();
 
+
+                final Handler handler = new Handler(Looper.getMainLooper());
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Do something after 100ms
+                        progressDialog.dismiss();
+
+                        ShowResultDialog();
+                    }
+                }, 5000);
 
 
             }
@@ -496,15 +509,105 @@ public class ChatFragment extends Fragment {
                 //Open camera
                 if (ContextCompat.checkSelfPermission(getContext(),
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        ) == PackageManager.PERMISSION_GRANTED) {
+                ) == PackageManager.PERMISSION_GRANTED) {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(intent,10);
-                }else {
+                    startActivityForResult(intent, 10);
+                } else {
                     ActivityCompat.requestPermissions(getActivity(),
-                            new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 }
+            }
+        });
+
+
+    }
+
+    private void ShowResultDialog() {
+
+        AlertDialog Result_Dialog = new AlertDialog.Builder(getActivity()).create();
+        Result_Dialog.setTitle("Accident Result");
+        final List<ReturnResult>[] arrayList = new List[]{new ArrayList<ReturnResult>()};
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://165.232.90.241/api/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ReturnResultApiInterface returnResultApiInterface = retrofit.create(ReturnResultApiInterface.class);
+
+        //  Call<List<ReturnResult>> call = returnResultApiInterface.getResultList();
+
+        Call<List<List<ReturnResult>>> call = returnResultApiInterface.getResultList();
+
+        call.enqueue(new Callback<List<List<ReturnResult>>>() {
+            @Override
+            public void onResponse(Call<List<List<ReturnResult>>> call, Response<List<List<ReturnResult>>> response) {
+                if (response.isSuccessful()) {
+
+
+                    List<ReturnResult> list = response.body().get(0);
+                    List<String> list1 = new ArrayList<>();
+
+                    for (ReturnResult d : list) {
+                        if (d.getEmail() != null && d.getEmail().equalsIgnoreCase(currentemail)) {
+                            if (d.getResult() != null) {
+                                list1.add(d.getResult());
+                                list1.remove("");
+
+                            }
+                        }
+
+                    }
+                    Log.d("list", "onResponse: " + list1);
+                    if (list1.get(0).toString().equalsIgnoreCase("1")) {
+                        Result_Dialog.setMessage("There is an accident:( ");
+
+
+                    } else {
+                        Result_Dialog.setMessage("There is No accident :)");
+
+                    }
+
+
+                    //  if (response.body().get(3).getEmail().equalsIgnoreCase(currentemail) && !response.body().get(3).getResult().trim().isEmpty()){}
+                    //   Result_Dialog.setMessage(response.body().get(0).get(3).getEmail().equalsIgnoreCase(currentemail) +"\n" +response.body().get(0).get(3).getResult());
+                    Result_Dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if (list1.get(0).toString().equalsIgnoreCase("1")) {
+
+                                        dialog.dismiss();
+                                    } else {
+                                        dialog.dismiss();
+                                        getParentFragmentManager().beginTransaction().replace(R.id.container, new MainFragment()).commit();
+
+
+                                    }
+
+
+                                }
+                            });
+                    //  arrayList[0] = response.body();
+                    //    Log.d("arrayList", "onResponse: "+ arrayList[0]);
+
+                    Toast.makeText(getActivity(), response.body().get(0).get(3).getEmail() + "\n" + response.body().get(0).get(3), Toast.LENGTH_SHORT).show();
+
+                    Result_Dialog.show();
+
+                } else {
+                    Toast.makeText(getActivity(), "Check your Connection", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<List<ReturnResult>>> call, Throwable t) {
+                Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                // Result_Dialog.setMessage(t.getLocalizedMessage());
+                Log.d("fail", "onFailure: " + t.getLocalizedMessage());
+                Result_Dialog.show();
             }
         });
 
@@ -517,18 +620,17 @@ public class ChatFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
 
+        if (requestCode == 10 && resultCode == RESULT_OK) {
 
-                if (requestCode == 10 && resultCode == RESULT_OK ) {
+            Uri uri = data.getData();
+            Context context = getActivity();
+            path = RealPathUtil.getRealPath(context, uri);
 
-Uri uri = data.getData();
-Context context = getActivity();
-path =RealPathUtil.getRealPath(context, uri);
-
-                    Bitmap bitmap = BitmapFactory.decodeFile(path);
-                    openCam_img.setImageBitmap(bitmap);
+            Bitmap bitmap = BitmapFactory.decodeFile(path);
+            openCam_img.setImageBitmap(bitmap);
 
 
-                }
+        }
 
     }
 
@@ -553,11 +655,11 @@ path =RealPathUtil.getRealPath(context, uri);
                 if (response.isSuccessful()) {
                     if (response.body().getCode().toString().equalsIgnoreCase("200")) {
                         Toast.makeText(getActivity(), "Upload success", Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
+                        //  progressDialog.dismiss();
 
                     } else {
                         Toast.makeText(getActivity(), "Upload failed", Toast.LENGTH_SHORT).show();
-                        progressDialog.dismiss();
+                        //  progressDialog.dismiss();
 
                     }
                 }
@@ -589,14 +691,14 @@ path =RealPathUtil.getRealPath(context, uri);
         if (args != null) {
             if (args.getString("id").equalsIgnoreCase("1")) {
                 user_id2.setText(args.getString("idkey"));
-              //  dialog.dismiss();
+                //  dialog.dismiss();
                 add_Accidentdetails2.setVisibility(View.GONE);
-               // add_Accidentdetails2.setVisibility(View.VISIBLE);
+                // add_Accidentdetails2.setVisibility(View.VISIBLE);
 
 
             } else if (args.getString("id").equalsIgnoreCase("2")) {
                 user_id2.setText(args.getString("qrscan"));
-               // dialog.dismiss();
+                // dialog.dismiss();
                 add_Accidentdetails2.setVisibility(View.VISIBLE);
 
                 Log.d("moham", "onCreateView: " + args.getString("qrscan"));

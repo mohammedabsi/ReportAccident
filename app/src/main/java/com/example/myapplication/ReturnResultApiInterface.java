@@ -6,6 +6,6 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 
 public interface ReturnResultApiInterface {
-    @GET("ParkingCar/public/get_parking")
-    Call<List<ReturnResult>> getResultList();
+    @GET("get_all_results")
+    Call<List<List<ReturnResult>>> getResultList();
 }
