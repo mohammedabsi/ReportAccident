@@ -323,13 +323,11 @@ public class ChatFragment extends Fragment {
             }
 
         if (count == 31 && message.trim().equalsIgnoreCase("a")) {
-            //todo : stop chat
             mimicOtherMessage("fault on user 2 by 100%");
             mButtonSend.setEnabled(false);
             mEditTextMessage.setEnabled(false);
 
         }  if (count == 31 && message.trim().equalsIgnoreCase("b")) {
-            //todo : stop chat
             mimicOtherMessage("fault on both users by 50%");
             mButtonSend.setEnabled(false);
             mEditTextMessage.setEnabled(false);
@@ -337,32 +335,27 @@ public class ChatFragment extends Fragment {
         }
 
         if (count == 21 && message.trim().equalsIgnoreCase("a")) {
-            //todo : stop chat
             mimicOtherMessage("fault on user 2 by 100%");
             mButtonSend.setEnabled(false);
             mEditTextMessage.setEnabled(false);
 
         }
         if (count == 21 && message.trim().equalsIgnoreCase("c")) {
-            //todo : stop chat
             mimicOtherMessage("fault on user 2 by 100%");
             mButtonSend.setEnabled(false);
             mEditTextMessage.setEnabled(false);
 
         }
         if (count == 21 && message.trim().equalsIgnoreCase("b")) {
-            //todo : stop chat
             mimicOtherMessage("are there any cars infront of user 1 when accident happened ? \n a- yes \n b- no ");
 
 
         }   if (count == 22 && message.trim().equalsIgnoreCase("a")) {
-            //todo : stop chat
             mimicOtherMessage("fault on user 2 by 100%");
             mButtonSend.setEnabled(false);
             mEditTextMessage.setEnabled(false);
 
         }  if (count == 22 && message.trim().equalsIgnoreCase("b")) {
-            //todo : stop chat
             mimicOtherMessage("fault on both users  by 50%");
             mButtonSend.setEnabled(false);
             mEditTextMessage.setEnabled(false);
@@ -371,7 +364,6 @@ public class ChatFragment extends Fragment {
 
 
             if (count == 11 && message.trim().equalsIgnoreCase("b")) {
-                //todo : stop chat
                 mimicOtherMessage("fault on both by 50%");
                 mButtonSend.setEnabled(false);
             mEditTextMessage.setEnabled(false);
