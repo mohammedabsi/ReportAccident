@@ -244,18 +244,18 @@ public class ChatFragment extends Fragment {
                 mEditTextMessage.getText().clear();
 
                 if (!user_id2.getText().toString().trim().isEmpty()) {
-                    mListView.setSelection(mAdapter.getCount() - 1);
-                    dialog.dismiss();
-                    if (message.contains("ok") || message.contains("yes") || message.contains("a") || message.contains("b") || message.contains("c") || message.contains("d")) {
-                        counter++;
+
+                mListView.setSelection(mAdapter.getCount() - 1);
+                dialog.dismiss();
+                if (message.contains("a") || message.contains("b") || message.contains("c") || message.contains("d")) {
+                    counter++;
 
 
-                    } else {
-                        mimicOtherMessage("Didn't recognize your input , try to write as requested !! ");
+                } else {
+                    mimicOtherMessage("Didn't recognize your input , try to write as requested !! ");
 
-                    }
-                    sendMessage(message, counter);
-
+                }
+                sendMessage(message, counter);
                 } else {
                     AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                     alertDialog.setTitle("Alert");
@@ -297,62 +297,123 @@ public class ChatFragment extends Fragment {
         //respond as Helloworld
 
 
-        if (message.trim().equalsIgnoreCase("yes") || message.trim().contains("done")) {
-            mimicOtherMessage("Choose the answer that includes your status by typing the code of your answer only \n to start the questions type ok");
+        if (count == 1 && (message.trim().equalsIgnoreCase("a") || message.trim().contains("b"))) {
+            mimicOtherMessage("where did the accident happended ? \n a-main street \n b-traffic light \n c- speed bump");
 
         }
 
-        if (message.trim().equalsIgnoreCase("ok")) {
-            mimicOtherMessage("Question 1 : are you riding on right side or left side of the road ? \n a- left \n b-right ");
-
-        }
-
-        if (count == 3) {
-
-            mimicOtherMessage("Question 2 : where did you get the hit ? \n a- bottom of the car \n b- front of the car \n c- left side \n  d- right side ");
-            secondList.add(message);
-
-        }
-        if (count == 4) {
-
-            mimicOtherMessage("Question 3 : whats your speed ?? \n a- 40 km< \n b- 40 km> \n c- 120 km>");
-            secondList.add(message);
 
 
-        }
-        if (count == 5) {
-
-            mimicOtherMessage("Question 4 : whats your speed ?? \n a- 40 km< \n b- 40 km> \n c- 120 km>");
-            secondList.add(message);
+            if (count == 2 && message.trim().equalsIgnoreCase("a")) {
+                counter = 10;
+                mimicOtherMessage("are both cars between lines when the accident happened ? \n a- yes \n b- no ");
 
 
-        }
-        if (count == 6) {
-            secondList.add(message);
-            // chatMessageArrayList.clear();
-            IntStream.range(0, firstList.size()).forEach(i -> {
-                double x = 1;
-
-                if (firstList.get(i).equals(secondList.get(i))) {
-                    thirdList.add(secondList.get(i));
-                    System.out.println(thirdList);
+            }
+            if (count == 2 && message.trim().equalsIgnoreCase("b")) {
+                counter = 20;
+                mimicOtherMessage("what color was the light when accident happened? \n a- green \n b- yellow \n c- other ");
 
 
-                }
+            }    if (count == 2 && message.trim().equalsIgnoreCase("c")) {
+                counter = 30;
+                mimicOtherMessage("where did the accident happened ? \n a- right on speed bump \n b-before speed bump ");
 
 
-            });
-            double q = (double) thirdList.size();
-            double w = (double) firstList.size();
-            double z = (double) (q / w) * 100;
-            mimicOtherMessage("your result is : " + z + " %");
+            }
+
+        if (count == 31 && message.trim().equalsIgnoreCase("a")) {
+            //todo : stop chat
+            mimicOtherMessage("fault on user 2 by 100%");
             mButtonSend.setEnabled(false);
             mEditTextMessage.setEnabled(false);
 
+        }  if (count == 31 && message.trim().equalsIgnoreCase("b")) {
+            //todo : stop chat
+            mimicOtherMessage("fault on both users by 50%");
+            mButtonSend.setEnabled(false);
+            mEditTextMessage.setEnabled(false);
 
         }
 
-    }
+        if (count == 21 && message.trim().equalsIgnoreCase("a")) {
+            //todo : stop chat
+            mimicOtherMessage("fault on user 2 by 100%");
+            mButtonSend.setEnabled(false);
+            mEditTextMessage.setEnabled(false);
+
+        }
+        if (count == 21 && message.trim().equalsIgnoreCase("c")) {
+            //todo : stop chat
+            mimicOtherMessage("fault on user 2 by 100%");
+            mButtonSend.setEnabled(false);
+            mEditTextMessage.setEnabled(false);
+
+        }
+        if (count == 21 && message.trim().equalsIgnoreCase("b")) {
+            //todo : stop chat
+            mimicOtherMessage("are there any cars infront of user 1 when accident happened ? \n a- yes \n b- no ");
+
+
+        }   if (count == 22 && message.trim().equalsIgnoreCase("a")) {
+            //todo : stop chat
+            mimicOtherMessage("fault on user 2 by 100%");
+            mButtonSend.setEnabled(false);
+            mEditTextMessage.setEnabled(false);
+
+        }  if (count == 22 && message.trim().equalsIgnoreCase("b")) {
+            //todo : stop chat
+            mimicOtherMessage("fault on both users  by 50%");
+            mButtonSend.setEnabled(false);
+            mEditTextMessage.setEnabled(false);
+
+        }
+
+
+            if (count == 11 && message.trim().equalsIgnoreCase("b")) {
+                //todo : stop chat
+                mimicOtherMessage("fault on both by 50%");
+                mButtonSend.setEnabled(false);
+            mEditTextMessage.setEnabled(false);
+
+            }
+
+
+            if (count == 11 && message.trim().equalsIgnoreCase("a")) {
+                mimicOtherMessage("what caused the accident ? \n a- traffic \n b- sudden use of breaks \n c- reverse \n d- other ");
+
+
+            }
+            if (count == 12 && message.trim().equalsIgnoreCase("a")) {
+                mimicOtherMessage("the fault on user 2 by 100 % ");
+                mButtonSend.setEnabled(false);
+                mEditTextMessage.setEnabled(false);
+
+            }
+            if (count == 12 && message.trim().equalsIgnoreCase("b")) {
+                mimicOtherMessage("both users get 50% fault");
+                mButtonSend.setEnabled(false);
+                mEditTextMessage.setEnabled(false);
+
+            }
+            if (count == 12 && message.trim().equalsIgnoreCase("c")) {
+                mimicOtherMessage("the fault on user 1 by 100 % ");
+                mButtonSend.setEnabled(false);
+                mEditTextMessage.setEnabled(false);
+
+            }
+            if (count == 12 && message.trim().equalsIgnoreCase("d")) {
+                mimicOtherMessage("Contact this number XXXXXXXX and the officer will come and assist");
+                mButtonSend.setEnabled(false);
+                mEditTextMessage.setEnabled(false);
+
+            }
+
+        }
+
+
+
+
 
     private void mimicOtherMessage(String message) {
         ChatMessage chatMessage = new ChatMessage(message, false, false);
@@ -467,6 +528,9 @@ public class ChatFragment extends Fragment {
             public void onClick(View view) {
                 if (openCam_img.getDrawable() == null) {
                     dialog.dismiss();
+                    // getParentFragmentManager().beginTransaction().replace(R.id.container, new MainFragment()).commit();
+
+                    getParentFragmentManager().beginTransaction().replace(R.id.container, new MainFragment()).commit();
 
                     Toast.makeText(getActivity(), "You cant start chatbot before uploading image", Toast.LENGTH_SHORT).show();
 
@@ -483,7 +547,6 @@ public class ChatFragment extends Fragment {
             public void onClick(View view) {
                 progressDialog.show();
                 ImageUpload(currentemail);
-                mimicOtherMessage("hello this is your assistant bot \n if you didnt get the other part Id please scan his code with the button shown down \n if you get the id then it must be shown at bottom of the chats \n type yes to start the chat bot");
                 dialog.dismiss();
                 // progressDialog.show();
 
@@ -572,13 +635,11 @@ public class ChatFragment extends Fragment {
                     }
 
 
-                    //  if (response.body().get(3).getEmail().equalsIgnoreCase(currentemail) && !response.body().get(3).getResult().trim().isEmpty()){}
-                    //   Result_Dialog.setMessage(response.body().get(0).get(3).getEmail().equalsIgnoreCase(currentemail) +"\n" +response.body().get(0).get(3).getResult());
                     Result_Dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     if (list1.get(0).toString().equalsIgnoreCase("1")) {
-
+                                        mimicOtherMessage("what type of accident did you have ? \n a- back crash \n b- frontal crash ");
                                         dialog.dismiss();
                                     } else {
                                         dialog.dismiss();
@@ -590,8 +651,7 @@ public class ChatFragment extends Fragment {
 
                                 }
                             });
-                    //  arrayList[0] = response.body();
-                    //    Log.d("arrayList", "onResponse: "+ arrayList[0]);
+
 
                     Toast.makeText(getActivity(), response.body().get(0).get(3).getEmail() + "\n" + response.body().get(0).get(3), Toast.LENGTH_SHORT).show();
 
