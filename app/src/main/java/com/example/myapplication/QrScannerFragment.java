@@ -104,6 +104,7 @@ public class QrScannerFragment extends Fragment {
                             ChatFragment fragmentd = new ChatFragment();
                             args.putString("qrscan", result.getText());
                                 args.putString("id", "2");
+                                args.putString("dialog", "3");
                             fragmentd.setArguments(args);
                             getParentFragmentManager().beginTransaction().replace(R.id.container, fragmentd).commit();
 

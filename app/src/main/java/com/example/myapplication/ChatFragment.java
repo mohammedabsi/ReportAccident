@@ -141,6 +141,7 @@ public class ChatFragment extends Fragment {
 
 
     ImageView openCam_img;
+   // private String imgtrigger = "0";
 
 
     public ChatFragment() {
@@ -180,7 +181,6 @@ public class ChatFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_chat, container, false);
 
-
         mButtonSend = v.findViewById(R.id.send);
         mEditTextMessage = v.findViewById(R.id.emailEdt);
         mListView = v.findViewById(R.id.mListView);
@@ -192,7 +192,21 @@ public class ChatFragment extends Fragment {
         firstList.add("b");
         firstList.add("c");
         firstList.add("d");
-        showDialog();
+
+        dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.uploadimg_dialog);
+        openCam_img = dialog.findViewById(R.id.openCam_img);
+
+
+
+
+
+
+
+
+
+
+
 
 
         add_Accidentdetails2.setOnClickListener(new View.OnClickListener() {
@@ -212,7 +226,7 @@ public class ChatFragment extends Fragment {
         mListView.setAdapter(mAdapter);
 
 
-        openCam_img = dialog.findViewById(R.id.openCam_img);
+
 
         qr_imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,6 +258,7 @@ public class ChatFragment extends Fragment {
                 mEditTextMessage.getText().clear();
 
                 if (!user_id2.getText().toString().trim().isEmpty()) {
+
 
                 mListView.setSelection(mAdapter.getCount() - 1);
                 dialog.dismiss();
@@ -286,6 +301,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onChanged(@Nullable CharSequence charSequence) {
                 user_id2.setText(charSequence);
+
 
             }
         });
@@ -503,8 +519,8 @@ public class ChatFragment extends Fragment {
     }
 
     public void showDialog() {
-        dialog = new Dialog(getActivity());
-        dialog.setContentView(R.layout.uploadimg_dialog);
+
+
 
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
@@ -520,10 +536,8 @@ public class ChatFragment extends Fragment {
             public void onClick(View view) {
                 if (openCam_img.getDrawable() == null) {
                     dialog.dismiss();
-                    // getParentFragmentManager().beginTransaction().replace(R.id.container, new MainFragment()).commit();
 
-                    getParentFragmentManager().beginTransaction().replace(R.id.container, new MainFragment()).commit();
-
+                  //  getParentFragmentManager().beginTransaction().replace(R.id.container, new MainFragment()).commit();
                     Toast.makeText(getActivity(), "You cant start chatbot before uploading image", Toast.LENGTH_SHORT).show();
 
                 } else {
@@ -549,6 +563,7 @@ public class ChatFragment extends Fragment {
                     public void run() {
                         //Do something after 100ms
                         progressDialog.dismiss();
+                        mimicOtherMessage("what type of accident did you have ? \n a- back crash \n b- frontal crash ");
 
                         ShowResultDialog();
                     }
@@ -593,7 +608,7 @@ public class ChatFragment extends Fragment {
 
         ReturnResultApiInterface returnResultApiInterface = retrofit.create(ReturnResultApiInterface.class);
 
-        //  Call<List<ReturnResult>> call = returnResultApiInterface.getResultList();
+
 
         Call<List<List<ReturnResult>>> call = returnResultApiInterface.getResultList();
 
@@ -631,7 +646,6 @@ public class ChatFragment extends Fragment {
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     if (list1.get(0).toString().equalsIgnoreCase("1")) {
-                                        mimicOtherMessage("what type of accident did you have ? \n a- back crash \n b- frontal crash ");
                                         dialog.dismiss();
                                     } else {
                                         dialog.dismiss();
@@ -763,6 +777,10 @@ public class ChatFragment extends Fragment {
 
         } else {
             qr_imageButton.setVisibility(View.GONE);
+       //    imgtrigger = "1";
+            showDialog();
+
+
 
         }
 
