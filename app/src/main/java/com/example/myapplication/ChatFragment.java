@@ -197,6 +197,19 @@ public class ChatFragment extends Fragment {
         dialog.setContentView(R.layout.uploadimg_dialog);
         openCam_img = dialog.findViewById(R.id.openCam_img);
 
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle("Alert !!!");
+        alertDialog.setMessage("I certify and pledge that the statment is all true !!");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                    }
+                });
+
+        alertDialog.show();
+
 
 
 

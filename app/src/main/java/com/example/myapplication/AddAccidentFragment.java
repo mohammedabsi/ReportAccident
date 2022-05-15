@@ -142,6 +142,18 @@ public class AddAccidentFragment extends Fragment {
         acident_address = v.findViewById(R.id.acident_address);
         generate_time = v.findViewById(R.id.generate_time);
 
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle("Alert !!!");
+        alertDialog.setMessage("I certify and pledge that the statment is all true !!");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                    }
+                });
+        alertDialog.show();
+
         //initializing MultiFormatWriter for QR code
         MultiFormatWriter mWriter = new MultiFormatWriter();
 
