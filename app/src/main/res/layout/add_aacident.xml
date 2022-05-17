@@ -126,4 +126,12 @@
         android:textColor="@color/white"
 
         android:textStyle="bold" />
+
+    <ProgressBar
+        android:visibility="gone"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:id="@+id/addAccident_prog"
+        />
 </LinearLayout>

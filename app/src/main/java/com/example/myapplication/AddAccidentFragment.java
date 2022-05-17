@@ -36,6 +36,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -84,6 +85,8 @@ public class AddAccidentFragment extends Fragment {
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     String currentemail = firebaseAuth.getCurrentUser().getEmail();
+
+    ProgressBar addAccident_prog ;
 
 
 
@@ -141,6 +144,7 @@ public class AddAccidentFragment extends Fragment {
         carplate = v.findViewById(R.id.carplate);
         acident_address = v.findViewById(R.id.acident_address);
         generate_time = v.findViewById(R.id.generate_time);
+        addAccident_prog = v.findViewById(R.id.addAccident_prog);
 
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
         alertDialog.setTitle("Alert !!!");
@@ -148,6 +152,7 @@ public class AddAccidentFragment extends Fragment {
         alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+
                         dialog.dismiss();
                         CreateAccident();
 
@@ -221,6 +226,7 @@ public class AddAccidentFragment extends Fragment {
 
 
     private void CreateAccident() {
+        addAccident_prog.setVisibility(View.VISIBLE);
         String acc_time = time.getText().toString().trim();
         String acc_add = acident_address.getText().toString().trim();
         String car_plt = carplate.getText().toString().trim();
@@ -239,6 +245,7 @@ public class AddAccidentFragment extends Fragment {
 
                                 if (task.isSuccessful()) {
 
+
                                     //jump to next fragment
                                     Bundle bundle = new Bundle();
                                     bundle.putString("idkey", idScanner.getText().toString()); // Put anything what you want
@@ -247,11 +254,14 @@ public class AddAccidentFragment extends Fragment {
 
                                     ChatFragment fragment2 = new ChatFragment();
                                     fragment2.setArguments(bundle);
+                                    addAccident_prog.setVisibility(View.GONE);
 
                                     getParentFragmentManager().beginTransaction().replace(R.id.container, fragment2).commit();
 
                                 } else {
                                     Toast.makeText(getActivity(), "Something went wrong , try again later ...", Toast.LENGTH_SHORT).show();
+                                    addAccident_prog.setVisibility(View.GONE);
+
                                 }
                             }
                         });
@@ -259,15 +269,23 @@ public class AddAccidentFragment extends Fragment {
 
                     }else {
                         idScanner.setError("Fill Empty Field");
+                        addAccident_prog.setVisibility(View.GONE);
+
                     }
                 }else {
                     carplate.setError("Fill Empty Field");
+                    addAccident_prog.setVisibility(View.GONE);
+
                 }
             }else {
                 acident_address.setError("Fill Empty Field");
+                addAccident_prog.setVisibility(View.GONE);
+
             }
         }else {
             time.setError("Fill Empty field");
+            addAccident_prog.setVisibility(View.GONE);
+
         }
 
 

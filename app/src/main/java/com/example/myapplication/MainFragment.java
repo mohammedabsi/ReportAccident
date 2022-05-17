@@ -1,9 +1,13 @@
 package com.example.myapplication;
 
+import android.Manifest;
 import android.bluetooth.le.ScanSettings;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -19,7 +23,7 @@ import android.widget.Toast;
  */
 public class MainFragment extends Fragment {
     Button joinAcc, addAcc;
-
+    private static final int MY_CAMERA_REQUEST_CODE = 100;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -70,6 +74,14 @@ public class MainFragment extends Fragment {
 
         joinAcc.setOnClickListener(listener);
         addAcc.setOnClickListener(listener);
+
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_DENIED){
+            ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
+            ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, MY_CAMERA_REQUEST_CODE);
+            ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_REQUEST_CODE);
+
+        }
 
 
         return v;

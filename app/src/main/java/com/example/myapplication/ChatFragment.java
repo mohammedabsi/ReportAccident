@@ -140,6 +140,9 @@ public class ChatFragment extends Fragment {
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     String currentemail = firebaseAuth.getCurrentUser().getEmail();
 
+    AlertDialog alertDialog , alertDialog2 ;
+
+
 
     ImageView openCam_img;
    // private String imgtrigger = "0";
@@ -182,6 +185,8 @@ public class ChatFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_chat, container, false);
 
+        alertDialog  = new AlertDialog.Builder(getActivity()).create();
+
         mButtonSend = v.findViewById(R.id.send);
         mEditTextMessage = v.findViewById(R.id.emailEdt);
         mListView = v.findViewById(R.id.mListView);
@@ -198,10 +203,10 @@ public class ChatFragment extends Fragment {
         dialog.setContentView(R.layout.uploadimg_dialog);
         openCam_img = dialog.findViewById(R.id.openCam_img);
 
-        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setTitle("Alert !!!");
-        alertDialog.setMessage("I certify and pledge that the statment is all true !!");
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+         alertDialog2 = new AlertDialog.Builder(getActivity()).create();
+        alertDialog2.setTitle("Alert !!!");
+        alertDialog2.setMessage("I certify and pledge that the statment is all true !!");
+        alertDialog2.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -209,7 +214,9 @@ public class ChatFragment extends Fragment {
                     }
                 });
 
-        alertDialog.show();
+
+
+
 
 
 
@@ -286,7 +293,6 @@ public class ChatFragment extends Fragment {
                 }
                 sendMessage(message, counter);
                 } else {
-                    AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                     alertDialog.setTitle("Alert");
                     alertDialog.setMessage("You Should Scan Qr code First ");
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
@@ -581,7 +587,7 @@ public class ChatFragment extends Fragment {
 
                         ShowResultDialog();
                     }
-                }, 5000);
+                }, 10000);
 
 
             }
@@ -633,7 +639,7 @@ public class ChatFragment extends Fragment {
 
 
                     List<ReturnResult> list = response.body().get(0);
-                   LinkedList list1 = new LinkedList();
+                   LinkedList <String> list1 = new LinkedList<String>();
 
                     for (ReturnResult d : list) {
                         if (d.getEmail() != null && d.getEmail().equalsIgnoreCase(currentemail)) {
@@ -641,30 +647,43 @@ public class ChatFragment extends Fragment {
                                 list1.add(d.getResult());
                                 list1.remove("");
 
+
                             }
                         }
 
                     }
 
-//                    LinkedList linkedList = null ;
-//
-//                    linkedList.add(list1);
-                    Log.d("listonResponse", "onResponse: " + list1.getLast());
-                    if (list1.getLast().toString().equalsIgnoreCase("1")) {
-                        Result_Dialog.setMessage("There is an accident:( ");
+                  Log.d("TAGOnRespponse", "onResponse: "+ list1 + "\n" + list1.getLast().trim());
 
 
-                    } else {
-                        Result_Dialog.setMessage("There is No accident :)");
 
+                    if (!list1.getLast().trim().isEmpty()){
+
+
+
+                        if (list1.getLast().toString().equalsIgnoreCase("1")) {
+                            Result_Dialog.setMessage("There is an accident:( ");
+
+
+                        } else {
+                            Result_Dialog.setMessage("There is No accident :)");
+
+                        }
+                    }else {
+                        Result_Dialog.setMessage("No result return , check the service");
                     }
+
+
 
 
                     Result_Dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    if (list1.getLast().toString().equalsIgnoreCase("1")) {
+
+                                    if (!list1.getLast().trim().isEmpty() && list1.getLast().equalsIgnoreCase("1")) {
                                         dialog.dismiss();
+                                        alertDialog2.show();
+
                                     } else {
                                         dialog.dismiss();
                                         getParentFragmentManager().beginTransaction().replace(R.id.container, new MainFragment()).commit();
@@ -769,20 +788,18 @@ public class ChatFragment extends Fragment {
         mButtonSend.setEnabled(true);
         mEditTextMessage.setEnabled(true);
 
+
         Bundle args = getArguments();
 
 
         if (args != null) {
             if (args.getString("id").equalsIgnoreCase("1")) {
                 user_id2.setText(args.getString("idkey"));
-                //  dialog.dismiss();
                 add_Accidentdetails2.setVisibility(View.GONE);
-                // add_Accidentdetails2.setVisibility(View.VISIBLE);
 
 
             } else if (args.getString("id").equalsIgnoreCase("2")) {
                 user_id2.setText(args.getString("qrscan"));
-                // dialog.dismiss();
                 add_Accidentdetails2.setVisibility(View.VISIBLE);
 
                 Log.d("moham", "onCreateView: " + args.getString("qrscan"));
