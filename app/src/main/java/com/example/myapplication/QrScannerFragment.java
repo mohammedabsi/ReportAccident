@@ -98,6 +98,7 @@ public class QrScannerFragment extends Fragment {
                             if (x!= null && x.equalsIgnoreCase("1") ){
 
 
+                                if (Patterns.EMAIL_ADDRESS.matcher(result.getText().toString().trim()).matches()){
                                     AddAccidentFragment fragmentc = new AddAccidentFragment();
                                     args.putString("qrscan", result.getText());
                                     fragmentc .setArguments(args);
@@ -105,11 +106,18 @@ public class QrScannerFragment extends Fragment {
 
 
 
+                                }else {
+                                    getParentFragmentManager().beginTransaction().replace(R.id.container, new AddAccidentFragment()).commit();
+                                    Toast.makeText(getActivity(), "Invalid Id , Scan correct Id provided by the app !", Toast.LENGTH_SHORT).show();
+                                }
+
+
 
 
                             }else
                             if (x!= null && x.equalsIgnoreCase("2")){
 
+                                if (Patterns.EMAIL_ADDRESS.matcher(result.getText().toString().trim()).matches()){
 
                                     ChatFragment fragmentd = new ChatFragment();
                                     args.putString("qrscan", result.getText());
@@ -117,6 +125,13 @@ public class QrScannerFragment extends Fragment {
                                     args.putString("dialog", "3");
                                     fragmentd.setArguments(args);
                                     getParentFragmentManager().beginTransaction().replace(R.id.container, fragmentd).commit();
+
+
+                                }else {
+                                    getParentFragmentManager().beginTransaction().replace(R.id.container, new ChatFragment()).commit();
+                                    Toast.makeText(getActivity(), "Invalid Id , Scan correct Id provided by the app !", Toast.LENGTH_SHORT).show();
+                                }
+
 
 
 

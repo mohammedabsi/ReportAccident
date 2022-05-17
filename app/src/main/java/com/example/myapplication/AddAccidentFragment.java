@@ -149,10 +149,11 @@ public class AddAccidentFragment extends Fragment {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        CreateAccident();
 
                     }
                 });
-        alertDialog.show();
+
 
         //initializing MultiFormatWriter for QR code
         MultiFormatWriter mWriter = new MultiFormatWriter();
@@ -201,7 +202,11 @@ public class AddAccidentFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-               CreateAccident();
+
+
+                alertDialog.show();
+
+
 
 
 
