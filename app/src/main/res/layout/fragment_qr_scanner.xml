@@ -24,7 +24,7 @@
         app:maskColor="#77000000"/>
 
      <TextView
-         android:id="@+id/tv"
+         android:id="@+id/resulttv"
          android:text="Result"
     android:layout_gravity="bottom|center"
          android:textSize="18sp"

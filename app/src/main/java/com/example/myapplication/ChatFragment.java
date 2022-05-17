@@ -70,6 +70,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -632,7 +633,7 @@ public class ChatFragment extends Fragment {
 
 
                     List<ReturnResult> list = response.body().get(0);
-                    List<String> list1 = new ArrayList<>();
+                   LinkedList list1 = new LinkedList();
 
                     for (ReturnResult d : list) {
                         if (d.getEmail() != null && d.getEmail().equalsIgnoreCase(currentemail)) {
@@ -644,8 +645,12 @@ public class ChatFragment extends Fragment {
                         }
 
                     }
-                    Log.d("list", "onResponse: " + list1);
-                    if (list1.get(0).toString().equalsIgnoreCase("1")) {
+
+//                    LinkedList linkedList = null ;
+//
+//                    linkedList.add(list1);
+                    Log.d("listonResponse", "onResponse: " + list1.getLast());
+                    if (list1.getLast().toString().equalsIgnoreCase("1")) {
                         Result_Dialog.setMessage("There is an accident:( ");
 
 
@@ -658,7 +663,7 @@ public class ChatFragment extends Fragment {
                     Result_Dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    if (list1.get(0).toString().equalsIgnoreCase("1")) {
+                                    if (list1.getLast().toString().equalsIgnoreCase("1")) {
                                         dialog.dismiss();
                                     } else {
                                         dialog.dismiss();

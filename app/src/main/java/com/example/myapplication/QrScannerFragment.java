@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +80,7 @@ public class QrScannerFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_qr_scanner, container, false);
         codeScannerView =  v.findViewById(R.id.scanner_view);
-        tv =  v.findViewById(R.id.tv);
+        tv =  v.findViewById(R.id.resulttv);
         codeScanner = new CodeScanner(getActivity(), codeScannerView);
 
 
@@ -92,23 +93,38 @@ public class QrScannerFragment extends Fragment {
 //                       viewModel.setText();
                         Bundle args = new Bundle();
 
-                        if (x!= null && x.equalsIgnoreCase("1") ){
-                            AddAccidentFragment fragmentc = new AddAccidentFragment();
-                            args.putString("qrscan", result.getText());
-                            fragmentc .setArguments(args);
-                        getParentFragmentManager().beginTransaction().replace(R.id.container, fragmentc).commit();
 
 
-                        }else
+                            if (x!= null && x.equalsIgnoreCase("1") ){
+
+
+                                    AddAccidentFragment fragmentc = new AddAccidentFragment();
+                                    args.putString("qrscan", result.getText());
+                                    fragmentc .setArguments(args);
+                                    getParentFragmentManager().beginTransaction().replace(R.id.container, fragmentc).commit();
+
+
+
+
+
+                            }else
                             if (x!= null && x.equalsIgnoreCase("2")){
-                            ChatFragment fragmentd = new ChatFragment();
-                            args.putString("qrscan", result.getText());
-                                args.putString("id", "2");
-                                args.putString("dialog", "3");
-                            fragmentd.setArguments(args);
-                            getParentFragmentManager().beginTransaction().replace(R.id.container, fragmentd).commit();
 
-                        }
+
+                                    ChatFragment fragmentd = new ChatFragment();
+                                    args.putString("qrscan", result.getText());
+                                    args.putString("id", "2");
+                                    args.putString("dialog", "3");
+                                    fragmentd.setArguments(args);
+                                    getParentFragmentManager().beginTransaction().replace(R.id.container, fragmentd).commit();
+
+
+
+
+                            }
+
+
+
                     }
                 });
             }
@@ -142,7 +158,11 @@ public class QrScannerFragment extends Fragment {
         viewModel.getText().observe(getViewLifecycleOwner(), new Observer<CharSequence>() {
             @Override
             public void onChanged(@Nullable CharSequence charSequence) {
-                tv.setText(charSequence);
+
+                    tv.setText(charSequence);
+
+
+
             }
         });
     }
